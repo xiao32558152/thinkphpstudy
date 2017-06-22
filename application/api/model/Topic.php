@@ -3,6 +3,8 @@
 namespace app\api\model;
 
 use think\Model;
+use think\Request;
+use app\api\model\Question as QuestionModel;
 
 class Topic extends Model
 {
@@ -18,5 +20,18 @@ class Topic extends Model
             ->select();
 
         return $banner;
+    }
+
+    public static function createTopic()
+    {
+        $price = input('post.price');
+        $stopTime = input('post.stoptime');
+
+        $question = new QuestionModel;
+        $question->speak_id = $question->createSpeak();
+        $question->price = $price;
+        $question->stop_time = $stopTime;
+        $question->save();
+        return $question->id;
     }
 }

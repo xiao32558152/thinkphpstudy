@@ -19,4 +19,14 @@ class Topic extends BaseController
         $banner = TopicModel::getTopic();
         return $banner;
     }
+
+    public function createTopic($id)
+    {
+        $topic = new TopicModel;
+        $topic->question_id = $topic->createTopic();
+        $topic->grade = input('post.grade');
+        $topic->subject = input('post.subject');
+        $topic->save();
+        return $topic->id;
+    }
 }
