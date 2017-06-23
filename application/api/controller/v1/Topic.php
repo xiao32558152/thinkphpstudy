@@ -29,4 +29,10 @@ class Topic extends BaseController
         $topic->save();
         return $topic->id;
     }
+
+    public function getAnswer($id)
+    {
+    	$answers = TopicModel::getAnswerByTopicID($id);
+    	return $answers;
+    }
 }

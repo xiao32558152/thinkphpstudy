@@ -22,6 +22,11 @@ class Topic extends Model
         return $banner;
     }
 
+    public function answers()
+    {
+        return $this->hasMany('Answer', 'topic_id', 'id');
+    }
+
     public static function createTopic()
     {
         $price = input('post.price');
@@ -33,5 +38,11 @@ class Topic extends Model
         $question->stop_time = $stopTime;
         $question->save();
         return $question->id;
+    }
+    public static function getAnswerByTopicID($id)
+    {
+        $answer = self::with(['answers','answers.speak'])
+            ->find($id);
+        return $answer;
     }
 }
