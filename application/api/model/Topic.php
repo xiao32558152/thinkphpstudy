@@ -16,7 +16,7 @@ class Topic extends Model
 
     public static function getTopic()
     {
-        $banner = self::with(['question','question.speak'])
+        $banner = self::with(['question','question.speak','question.speak.image'])
             ->select();
 
         return $banner;
