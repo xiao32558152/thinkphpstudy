@@ -15,12 +15,29 @@ class Topic extends Model
         return $this->belongsTo('Question', 'question_id', 'id');
     }
 
-    public static function getTopic($id)
+    public static function getTopic($id, $sort)
     {
-        $banner = self::with(['question','question.speak','question.speak.image'])->order('id', 'desc')->page($id,10)
+        if ($sort == 0)
+        {
+            $banner = self::with(['question','question.speak','question.speak.image'])->page($id,10)
             ->select();
 
-        return $banner;
+            return $banner;
+        }
+        else if ($sort == 1)
+        {
+            $banner = self::with(['question','question.speak','question.speak.image'])->order('id', 'desc')->page($id,10)
+            ->select();
+
+            return $banner;
+        }
+        else
+        {
+            $banner = self::with(['question','question.speak','question.speak.image'])->order('price', 'desc')->page($id,10)
+            ->select();
+
+            return $banner;
+        }
     }
 
     public function answers()
@@ -31,12 +48,10 @@ class Topic extends Model
 
     public static function createTopic()
     {
-        $price = input('post.price');
         $stopTime = input('post.stoptime');
 
         $question = new QuestionModel;
         $question->speak_id = $question->createSpeak();
-        $question->price = $price;
         $question->stop_time = $stopTime;
         $question->ask_time = date('Y-m-d H:i:s',time());
         $question->save();

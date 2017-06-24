@@ -22,7 +22,7 @@ Route::post('api/:version/sample/test3', 'api/:version.Sample/test3');
 Route::get('api/:version/banner/:id', 'api/:version.Banner/getBanner');
 
 //
-Route::get('api/:version/topic/:id', 'api/:version.Topic/getTopic');
+Route::get('api/:version/topic/:id/:sort', 'api/:version.Topic/getTopic');
 Route::post('api/:version/createtopic/:id', 'api/:version.Topic/createTopic');
 Route::get('api/:version/answer/:id', 'api/:version.Topic/getAnswer');
 Route::post('api/:version/createanswer', 'api/:version.Topic/setAnswer');

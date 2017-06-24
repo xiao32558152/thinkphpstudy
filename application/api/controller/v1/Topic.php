@@ -13,20 +13,22 @@ use app\api\model\Topic as TopicModel;
 
 class Topic extends BaseController
 {
-    public function getTopic($id)
+    public function getTopic($id, $sort)
     {
         // id为空则返回前20个topic
-        $banner = TopicModel::getTopic($id);
+        $banner = TopicModel::getTopic($id, $sort);
         return $banner;
     }
 
     public function createTopic($id)
     {
+    	$price = input('post.price');
         $topic = new TopicModel;
         $topic->question_id = $topic->createTopic();
         $topic->grade = input('post.grade');
         $topic->subject = input('post.subject');
 		$topic->createtime = date('Y-m-d H:i:s',time());
+		$topic->price = $price;
         $topic->save();
         return $topic->id;
     }
