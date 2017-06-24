@@ -37,7 +37,6 @@ class Topic extends Model
         $question->speak_id = $question->createSpeak();
         $question->price = $price;
         $question->stop_time = $stopTime;
-        $question->ask_time = date('Y-m-d H:i:s',time());
         $question->save();
         return $question->id;
     }
@@ -54,6 +53,6 @@ class Topic extends Model
         $answer->topic_id = $id;
         $answer->answer_time = date('Y-m-d H:i:s',time());
         $answer->save();
-        return 1;
+        return $answer->id;
     }
 }
