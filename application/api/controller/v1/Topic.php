@@ -35,4 +35,9 @@ class Topic extends BaseController
     	$answers = TopicModel::getAnswerByTopicID($id);
     	return $answers;
     }
+    public function setAnswer()
+    {
+    	$topic_id = input('post.topic_id');
+    	return TopicModel::setAnswerByTopicID($topic_id);
+    }
 }

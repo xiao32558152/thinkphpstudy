@@ -5,6 +5,7 @@ namespace app\api\model;
 use think\Model;
 use think\Request;
 use app\api\model\Question as QuestionModel;
+use app\api\model\Answer as AnswerModel;
 
 class Topic extends Model
 {
@@ -44,5 +45,14 @@ class Topic extends Model
         $answer = self::with(['answers','answers.speak'])
             ->find($id);
         return $answer;
+    }
+    public static function setAnswerByTopicID($id)
+    {
+        $answer = new AnswerModel;
+        $answer->speak_id = $answer->createSpeak();
+        $answer->topic_id = $id;
+        $answer->answer_time = date('Y-m-d H:i:s',time());
+        $answer->save();
+        return 1;
     }
 }

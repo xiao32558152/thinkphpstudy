@@ -25,6 +25,7 @@ Route::get('api/:version/banner/:id', 'api/:version.Banner/getBanner');
 Route::get('api/:version/topic/:id', 'api/:version.Topic/getTopic');
 Route::post('api/:version/createtopic/:id', 'api/:version.Topic/createTopic');
 Route::get('api/:version/answer/:id', 'api/:version.Topic/getAnswer');
+Route::post('api/:version/createanswer', 'api/:version.Topic/setAnswer');
 
 //Theme
 // 如果要使用分组路由，建议使用闭包的方式，数组的方式不允许有同名的key
