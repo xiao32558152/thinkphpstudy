@@ -37,6 +37,7 @@ class Topic extends Model
         $question->speak_id = $question->createSpeak();
         $question->price = $price;
         $question->stop_time = $stopTime;
+        $question->ask_time = date('Y-m-d H:i:s',time());
         $question->save();
         return $question->id;
     }
