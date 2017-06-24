@@ -25,7 +25,8 @@ class Topic extends Model
 
     public function answers()
     {
-        return $this->hasMany('Answer', 'topic_id', 'id');
+        // 只返回最新的一个答案
+        return $this->hasMany('Answer', 'topic_id', 'id')->order('answer_time', 'desc')->limit(1);
     }
 
     public static function createTopic()
