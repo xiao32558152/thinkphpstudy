@@ -26,14 +26,14 @@ class Topic extends Model
         }
         else if ($sort == 1)
         {
-            $banner = self::with(['question','question.speak','question.speak.image'])->order('id', 'desc')->page($id,10)
+            $banner = self::with(['question','question.speak','question.speak.image'])->where('grade', '=', $grade)->where('subject', '=', $subject)->order('id', 'desc')->page($id,10)
             ->select();
 
             return $banner;
         }
         else
         {
-            $banner = self::with(['question','question.speak','question.speak.image'])->order('price', 'desc')->page($id,10)
+            $banner = self::with(['question','question.speak','question.speak.image'])->where('grade', '=', $grade)->where('subject', '=', $subject)->order('price', 'desc')->page($id,10)
             ->select();
 
             return $banner;
