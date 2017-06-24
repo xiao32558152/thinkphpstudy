@@ -15,11 +15,11 @@ class Topic extends Model
         return $this->belongsTo('Question', 'question_id', 'id');
     }
 
-    public static function getTopic($id, $sort)
+    public static function getTopic($id, $sort, $grade, $subject)
     {
         if ($sort == 0)
         {
-            $banner = self::with(['question','question.speak','question.speak.image'])->page($id,10)
+            $banner = self::with(['question','question.speak','question.speak.image'])->where('grade', '=', $grade)->where('subject', '=', $subject)->page($id,10)
             ->select();
 
             return $banner;

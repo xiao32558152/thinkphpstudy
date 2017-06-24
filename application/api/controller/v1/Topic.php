@@ -13,10 +13,10 @@ use app\api\model\Topic as TopicModel;
 
 class Topic extends BaseController
 {
-    public function getTopic($id, $sort)
+    public function getTopic($id, $sort, $grade, $subject)
     {
         // id为空则返回前20个topic
-        $banner = TopicModel::getTopic($id, $sort);
+        $banner = TopicModel::getTopic($id, $sort, $grade, $subject);
         return $banner;
     }
 
