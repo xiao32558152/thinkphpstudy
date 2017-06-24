@@ -51,7 +51,6 @@ class Topic extends Model
         $answer = new AnswerModel;
         $answer->speak_id = $answer->createSpeak();
         $answer->topic_id = $id;
-        $answer->answer_time = date('Y-m-d H:i:s',time());
         $answer->save();
         return $answer->id;
     }

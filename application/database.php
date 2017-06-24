@@ -13,13 +13,13 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-   // 'hostname'        => '5944e7756326b.gz.cdb.myqcloud.com:17943',
-    'hostname'        => '10.66.241.171',
+    // 'hostname'        => '5944e7756326b.gz.cdb.myqcloud.com:17943',
+   'hostname'        => '10.66.241.171',
     // 数据库名
     'database'        => 'zerg',
     // 用户名
-//    'username'        => 'cdb_outerroot',
-    'username'        => 'root',
+    // 'username'        => 'cdb_outerroot',
+   'username'        => 'root',
     // 密码
     'password'        => 'SUDA2017',
     // 端口
@@ -47,7 +47,7 @@ return [
     // 数据集返回类型
     'resultset_type'  => 'collection',
     // 自动写入时间戳字段
-    'auto_timestamp'  => false,
+    'auto_timestamp'  => true,
     // 时间字段取出后的默认时间格式
     'datetime_format' => 'Y-m-d H:i:s',
     // 是否需要进行SQL性能分析

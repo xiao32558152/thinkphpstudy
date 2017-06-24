@@ -26,7 +26,6 @@ class Topic extends BaseController
         $topic->question_id = $topic->createTopic();
         $topic->grade = input('post.grade');
         $topic->subject = input('post.subject');
-        $topic->create_time = date('Y-m-d H:i:s',time());
         $topic->save();
         return $topic->id;
     }
