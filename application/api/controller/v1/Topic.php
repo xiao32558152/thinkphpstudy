@@ -10,6 +10,7 @@ namespace app\api\controller\v1;
 
 use app\api\controller\BaseController;
 use app\api\model\Topic as TopicModel;
+use app\api\model\UserTopic as UserTopicModel;
 
 class Topic extends BaseController
 {
@@ -29,7 +30,15 @@ class Topic extends BaseController
         $topic->subject = input('post.subject');
 		$topic->createtime = date('Y-m-d H:i:s',time());
 		$topic->price = $price;
+		$topic->user_id = input('post.userid');
         $topic->save();
+
+        $user_topic = new UserTopicModel;
+        $user_topic->user_id = input('post.userid');
+        $user_topic->topic_id = $topic->id;
+        $user_topic->role = 1;
+        $user_topic->save();
+
         return $topic->id;
     }
 
@@ -44,6 +53,14 @@ class Topic extends BaseController
     	$answer_id = TopicModel::setAnswerByTopicID($topic_id);
     	$topic = TopicModel::get($topic_id);
     	$topic->status = 2; // 回答完成待确认
+    	$topic->save();
+
+    	$user_topic = new UserTopicModel;
+        $user_topic->user_id = input('post.userid');
+        $user_topic->topic_id = $topic->id;
+        $user_topic->role = 2;
+        $user_topic->save();
+
     	return $answer_id;
     }
 }

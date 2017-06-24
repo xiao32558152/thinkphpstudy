@@ -17,27 +17,29 @@ class Topic extends Model
 
     public static function getTopic($id, $sort, $grade, $subject)
     {
-        if ($sort == 0)
+        $banner = self::with(['question','question.speak','question.speak.image']);
+        // 是否是全部年级
+        if ($grade != 0)
         {
-            $banner = self::with(['question','question.speak','question.speak.image'])->where('grade', '=', $grade)->where('subject', '=', $subject)->page($id,10)
-            ->select();
-
-            return $banner;
+            $banner = $banner->where('grade', '=', $grade);
         }
-        else if ($sort == 1)
+        // 是否是全部学科
+        if ($subject != 0)
         {
-            $banner = self::with(['question','question.speak','question.speak.image'])->where('grade', '=', $grade)->where('subject', '=', $subject)->order('id', 'desc')->page($id,10)
-            ->select();
-
-            return $banner;
+            $banner = $banner->where('subject', '=', $subject);
         }
-        else
+        if ($sort == 1)
         {
-            $banner = self::with(['question','question.speak','question.speak.image'])->where('grade', '=', $grade)->where('subject', '=', $subject)->order('price', 'desc')->page($id,10)
-            ->select();
-
-            return $banner;
+            $banner = $banner->order('id', 'desc');
         }
+        else if ($sort == 2)
+        {
+            $banner = $banner->order('price', 'desc');
+        }
+
+        $banner = $banner->page($id,10)->select();
+        
+        return $banner;
     }
 
     public function answers()
