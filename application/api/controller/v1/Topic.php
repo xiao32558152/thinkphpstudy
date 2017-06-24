@@ -16,7 +16,7 @@ class Topic extends BaseController
     public function getTopic($id)
     {
         // id为空则返回前20个topic
-        $banner = TopicModel::getTopic();
+        $banner = TopicModel::getTopic($id);
         return $banner;
     }
 

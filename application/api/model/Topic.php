@@ -15,9 +15,9 @@ class Topic extends Model
         return $this->belongsTo('Question', 'question_id', 'id');
     }
 
-    public static function getTopic()
+    public static function getTopic($id)
     {
-        $banner = self::with(['question','question.speak','question.speak.image'])
+        $banner = self::with(['question','question.speak','question.speak.image'])->order('id', 'desc')->page($id,10)
             ->select();
 
         return $banner;
