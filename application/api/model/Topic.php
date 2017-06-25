@@ -15,7 +15,7 @@ class Topic extends Model
         return $this->belongsTo('Question', 'question_id', 'id');
     }
 
-    public static function getTopic($id, $sort, $grade, $subject)
+    public static function getTopic($id, $sort, $grade, $subject, $status, $isPublic)
     {
         $banner = self::with(['question','question.speak','question.speak.image']);
         // 是否是全部年级
@@ -27,6 +27,15 @@ class Topic extends Model
         if ($subject != 0)
         {
             $banner = $banner->where('subject', '=', $subject);
+        }
+        if ($status == 0)
+        {
+            $banner = $banner->where('status', '=', $status);
+        }
+        else if ($status == 8 && $isPublic)
+        {
+            $banner = $banner->where('status', '=', $status);
+            $banner = $banner->where('isPublic', '=', 1);
         }
         if ($sort == 1)
         {
