@@ -70,6 +70,8 @@ Route::post('api/:version/token/user', 'api/:version.Token/getToken');
 Route::post('api/:version/token/app', 'api/:version.Token/getAppToken');
 Route::post('api/:version/token/verify', 'api/:version.Token/verifyToken');
 
+Route::get('api/:version/token/cos', 'api/:version.Token/getCosToken');
+
 //Address
 Route::post('api/:version/address', 'api/:version.Address/createOrUpdateAddress');
 Route::get('api/:version/address', 'api/:version.Address/getUserAddress');

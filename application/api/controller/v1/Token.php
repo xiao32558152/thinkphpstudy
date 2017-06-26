@@ -13,6 +13,7 @@ namespace app\api\controller\v1;
 
 use app\api\service\AppToken;
 use app\api\service\UserToken;
+use app\api\service\CosToken;
 use app\api\service\Token as TokenService;
 use app\api\validate\AppTokenGet;
 use app\api\validate\TokenGet;
@@ -70,4 +71,12 @@ class Token
         ];
     }
 
+    public function getCosToken()
+    {
+        $cos = new CosToken();
+        $token = $cos->get();
+        return [
+            'token' => $token
+        ];
+    }
 }
