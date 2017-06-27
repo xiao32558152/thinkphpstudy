@@ -126,6 +126,13 @@ class UserToken extends Token
         }
         else {
             $uid = $user->id;
+            // 更新user信息
+            $user->nickname = nickName;
+            $user->gender = $gender;
+            $user->city = $city;
+            $user->province = $province;
+            $user->avatar_url = avatarUrl;
+            $user->save();
         }
         $cachedValue = $this->prepareCachedValue($wxResult, $uid);
         $token = $this->saveToCache($cachedValue);
@@ -159,11 +166,11 @@ class UserToken extends Token
             [
                 'openid' => $openid
             ]);
-        $user->nickname = nickName;
+        $user->nickname = $nickName;
         $user->gender = $gender;
         $user->city = $city;
         $user->province = $province;
-        $user->avatar_url = avatarUrl;
+        $user->avatar_url = $avatarUrl;
         $user->save();
         return $user->id;
     }
