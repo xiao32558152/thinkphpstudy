@@ -127,11 +127,16 @@ class UserToken extends Token
         else {
             $uid = $user->id;
             // 更新user信息
-            $user->nickname = nickName;
+            $nickName = input('post.nick_name');
+            $gender = input('post.gender');
+            $city = input('post.city');
+            $province = input('post.province');
+            $avatarUrl = input('post.avatarurl');
+            $user->nickname = $nickName;
             $user->gender = $gender;
             $user->city = $city;
             $user->province = $province;
-            $user->avatar_url = avatarUrl;
+            $user->avatar_url = $avatarUrl;
             $user->save();
         }
         $cachedValue = $this->prepareCachedValue($wxResult, $uid);
