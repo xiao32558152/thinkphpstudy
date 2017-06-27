@@ -11,6 +11,9 @@ namespace app\api\controller\v1;
 use app\api\controller\BaseController;
 use app\api\model\Topic as TopicModel;
 use app\api\model\UserTopic as UserTopicModel;
+use app\api\model\User;
+use app\api\service\Token;
+use app\api\service\Token as TokenService;
 use think\Log;
 
 class Topic extends BaseController
@@ -19,7 +22,7 @@ class Topic extends BaseController
     {
         // id为空则返回前20个topic
         $banner = TopicModel::getTopic($id, $sort, $grade, $subject, 0, 0);
-        Log::record("get topic", 'log');
+        Log::write("get topic", 'log');
         return $banner;
     }
 
@@ -32,6 +35,15 @@ class Topic extends BaseController
 
     public function createTopic($id)
     {
+    	$uid = TokenService::getCurrentUid();
+        $user = User::get($uid);
+        if(!$user){
+            throw new UserException([
+                'code' => 404,
+                'msg' => '该用户不存在',
+                'errorCode' => 60001
+            ]);
+        }
     	$price = input('post.price');
         $topic = new TopicModel;
         $topic->question_id = $topic->createTopic();
@@ -39,11 +51,11 @@ class Topic extends BaseController
         $topic->subject = input('post.subject');
 		$topic->createtime = date('Y-m-d H:i:s',time());
 		$topic->price = $price;
-		$topic->user_id = input('post.userid');
+		$topic->user_id = $user->id;
         $topic->save();
 
         $user_topic = new UserTopicModel;
-        $user_topic->user_id = input('post.userid');
+        $user_topic->user_id = $user->id;
         $user_topic->topic_id = $topic->id;
         $user_topic->role = 1;
         $user_topic->save();
