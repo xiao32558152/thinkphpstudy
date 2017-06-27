@@ -35,6 +35,8 @@ class Token
         (new TokenGet())->goCheck();
         $wx = new UserToken($code);
         $token = $wx->get();
+        Log::write("token:", 'log');
+        Log::write($token, 'log');
         return [
             'token' => $token
         ];
