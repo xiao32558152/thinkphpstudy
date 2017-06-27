@@ -8,6 +8,7 @@ use app\lib\exception\TokenException;
 use app\lib\exception\WeChatException;
 use think\Exception;
 use think\Model;
+use think\Request;
 
 /**
  * 微信登录
@@ -148,10 +149,22 @@ class UserToken extends Token
         // 全局异常处理会记录日志
         // 并且这样的异常属于服务器异常
         // 也不应该定义BaseException返回到客户端
+
+        $nickName = input('post.nick_name');
+        $gender = input('post.gender');
+        $city = input('post.city');
+        $province = input('post.province');
+        $avatarUrl = input('post.avatarurl');
         $user = User::create(
             [
                 'openid' => $openid
             ]);
+        $user->nickname = nickName;
+        $user->gender = $gender;
+        $user->city = $city;
+        $user->province = $province;
+        $user->avatar_url = avatarUrl;
+        $user->save();
         return $user->id;
     }
 }
