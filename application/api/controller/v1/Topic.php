@@ -11,6 +11,7 @@ namespace app\api\controller\v1;
 use app\api\controller\BaseController;
 use app\api\model\Topic as TopicModel;
 use app\api\model\UserTopic as UserTopicModel;
+use think\Log;
 
 class Topic extends BaseController
 {
@@ -18,6 +19,7 @@ class Topic extends BaseController
     {
         // id为空则返回前20个topic
         $banner = TopicModel::getTopic($id, $sort, $grade, $subject, 0, 0);
+        Log::record("get topic", 'log');
         return $banner;
     }
 
