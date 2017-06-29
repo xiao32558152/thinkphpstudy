@@ -70,14 +70,24 @@ class Topic extends BaseController
     }
     public function setAnswer()
     {
+    	$uid = TokenService::getCurrentUid();
+        $user = User::get($uid);
+        if(!$user){
+            throw new UserException([
+                'code' => 404,
+                'msg' => '该用户不存在',
+                'errorCode' => 60001
+            ]);
+        }
+
     	$topic_id = input('post.topic_id');
     	$answer_id = TopicModel::setAnswerByTopicID($topic_id);
     	$topic = TopicModel::get($topic_id);
-    	$topic->status = 2; // 回答完成待确认
+    	$topic->status = 2; // 2表示回答完成待确认，8表示完成付款
     	$topic->save();
 
     	$user_topic = new UserTopicModel;
-        $user_topic->user_id = input('post.userid');
+        $user_topic->user_id = $user->id;
         $user_topic->topic_id = $topic->id;
         $user_topic->role = 2;
         $user_topic->save();
