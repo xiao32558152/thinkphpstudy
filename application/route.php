@@ -24,6 +24,7 @@ Route::get('api/:version/banner/:id', 'api/:version.Banner/getBanner');
 //
 Route::get('api/:version/topic/:id/:sort/:grade/:subject', 'api/:version.Topic/getTopic');
 Route::post('api/:version/createtopic/:id', 'api/:version.Topic/createTopic');
+Route::post('api/:version/rushtopic', 'api/:version.Topic/rushTopic');
 Route::get('api/:version/answer/:id', 'api/:version.Topic/getAnswer');
 Route::post('api/:version/createanswer', 'api/:version.Topic/setAnswer');
 

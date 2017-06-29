@@ -63,6 +63,34 @@ class Topic extends BaseController
         return $topic->id;
     }
 
+	public function rushTopic()
+	{
+		$uid = TokenService::getCurrentUid();
+        $user = User::get($uid);
+        if(!$user){
+            throw new UserException([
+                'code' => 404,
+                'msg' => '该用户不存在',
+                'errorCode' => 60001
+            ]);
+        }
+
+        // 检查下是否已经被其他用户抢走了
+        $topic_id = input('post.topic_id');
+        $topic = TopicModel::get($topic_id);
+        if ($topic->status != 0)
+        {
+        	return -1;
+        }
+
+        // 设置抢答状态
+        $topic->status = 1;
+        $topic->answer_user_id = $user->id;
+        $topic->save();
+
+        return "success";
+	}
+
     public function getAnswer($id)
     {
     	$answers = TopicModel::getAnswerByTopicID($id);
@@ -86,10 +114,11 @@ class Topic extends BaseController
     	$topic->status = 2; // 2表示回答完成待确认，8表示完成付款
     	$topic->save();
 
+		// 该话题增加了一位参与的用户
     	$user_topic = new UserTopicModel;
         $user_topic->user_id = $user->id;
         $user_topic->topic_id = $topic->id;
-        $user_topic->role = 2;
+        $user_topic->role = 1;
         $user_topic->save();
 
     	return $answer_id;
