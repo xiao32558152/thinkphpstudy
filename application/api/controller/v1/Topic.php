@@ -88,7 +88,7 @@ class Topic extends BaseController
         $topic->answer_user_id = $user->id;
         $topic->save();
 
-        return "success";
+        return 0;
 	}
 
     public function getAnswer($id)
