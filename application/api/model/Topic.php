@@ -51,6 +51,24 @@ class Topic extends Model
         return $banner;
     }
 
+    public static function getMyTopic($id, $type, $userID)
+    {
+        $banner = self::with(['question','question.speak','question.speak.image']);
+
+        if ($type == 0)
+        {// 我问
+            $banner = $banner->where('user_id', '=', $userID);
+        }
+        else
+        {// 我答
+            $banner = $banner->where('answer_user_id', '=', $userID);
+        }
+        
+        $banner = $banner->order('id', 'desc');
+        $banner = $banner->page($id,10)->select();
+        
+        return $banner;
+    }
     public function answers()
     {
         // 只返回最新的一个答案

@@ -33,6 +33,23 @@ class Topic extends BaseController
         return $banner;
     }
 
+    public function getMyTopic()
+    {
+        $page = input('post.page');
+        $type = input('post.type');
+        $uid = TokenService::getCurrentUid();
+        $user = User::get($uid);
+        if(!$user){
+            throw new UserException([
+                'code' => 404,
+                'msg' => '该用户不存在',
+                'errorCode' => 60001
+            ]);
+        }
+        $banner = TopicModel::getMyTopic($page, $type, $user->id);
+        return $banner;
+    }
+
     public function createTopic($id)
     {
     	$uid = TokenService::getCurrentUid();
