@@ -2,6 +2,7 @@
 
 namespace app\api\model;
 
+use app\lib\enum\TopicStatusEnum;
 use think\Model;
 use think\Request;
 use app\api\model\Question as QuestionModel;
@@ -28,7 +29,7 @@ class Topic extends Model
         {
             $banner = $banner->where('subject', '=', $subject);
         }
-        if ($status == 0)
+        if ($status == TopicStatusEnum::WAIT_ANSWER)
         {
             $banner = $banner->where('status', '=', $status);
         }
@@ -88,7 +89,7 @@ class Topic extends Model
     }
     public static function getAnswerByTopicID($id)
     {
-        $answer = self::with(['answers','answers.speak'])
+        $answer = self::with(['answers','answers.speak','answers.speak.image'])
             ->find($id);
         return $answer;
     }
