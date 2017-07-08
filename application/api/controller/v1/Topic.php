@@ -62,10 +62,12 @@ class Topic extends BaseController
             ]);
         }
     	$price = input('post.price');
+        $stopTime = input('post.stoptime');
         $topic = new TopicModel;
         $topic->question_id = $topic->createTopic();
         $topic->grade = input('post.grade');
         $topic->subject = input('post.subject');
+        $topic->stop_time = $stopTime;
 		$topic->createtime = date('Y-m-d H:i:s',time());
 		$topic->price = $price;
 		$topic->user_id = $user->id;

@@ -18,6 +18,8 @@ class Topic extends Model
 
     public static function getTopic($id, $sort, $grade, $subject, $status, $isPublic)
     {
+        self::where('stop_time', '<=', date('Y-m-d H:i:s',time()))->update(['status' => '9']);
+
         $banner = self::with(['question','question.speak','question.speak.image']);
         // 是否是全部年级
         if ($grade != 0)
@@ -38,6 +40,7 @@ class Topic extends Model
             $banner = $banner->where('status', '=', $status);
             $banner = $banner->where('isPublic', '=', 1);
         }
+        // $banner = $banner->where('stop_time', '>', date('Y-m-d H:i:s',time()));
         if ($sort == 1)
         {
             $banner = $banner->order('id', 'desc');
@@ -54,6 +57,8 @@ class Topic extends Model
 
     public static function getMyTopic($id, $type, $userID)
     {
+        self::where('stop_time', '<=', date('Y-m-d H:i:s',time()))->update(['status' => '9']);
+        
         $banner = self::with(['question','question.speak','question.speak.image']);
 
         if ($type == 0)
@@ -79,7 +84,6 @@ class Topic extends Model
     public static function createTopic()
     {
         $stopTime = input('post.stoptime');
-
         $question = new QuestionModel;
         $question->speak_id = $question->createSpeak();
         $question->stop_time = $stopTime;
