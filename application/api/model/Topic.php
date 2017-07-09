@@ -40,7 +40,7 @@ class Topic extends Model
         //         }
         //     }
         // }
-        $banner = self::with(['question','question.speak','question.speak.image','question.speak.user']);
+        $banner = self::with(['question','question.speak','question.speak.image']);
         // 是否是全部年级
         if ($grade != 0)
         {
