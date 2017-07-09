@@ -9,6 +9,8 @@ class User extends BaseModel
     protected $autoWriteTimestamp = true;
 //    protected $createTime = ;
 
+    protected $hidden = ['id', 'openid', 'from', 'city', 'province', 'extend', 'create_time', 'update_time', 'delete_time'];
+
     public function orders()
     {
         return $this->hasMany('Order', 'user_id', 'id');

@@ -11,6 +11,8 @@ use app\api\model\Answer as AnswerModel;
 class Topic extends Model
 {
     //
+    protected $hidden = ['question_id', 'isPublic', 'user_id', 'answer_user_id', 'stop_time'];
+
     public function question()
     {
         return $this->belongsTo('Question', 'question_id', 'id');
@@ -19,8 +21,26 @@ class Topic extends Model
     public static function getTopic($id, $sort, $grade, $subject, $status, $isPublic)
     {
         self::where('stop_time', '<=', date('Y-m-d H:i:s',time()))->update(['status' => '9']);
-
-        $banner = self::with(['question','question.speak','question.speak.image']);
+        
+        // 设置speak的user_id
+        // for ($x=0; $x<=106; $x++) 
+        // {
+        //     $topic = self::get($x);
+        //     if ($topic)
+        //     {
+        //         $question = Question::get($topic->question_id);
+        //         if ($question) 
+        //         {
+        //             $qSpeak = Speak::get($question->speak_id);
+        //             if ($qSpeak)
+        //             {
+        //                 $qSpeak->user_id = $topic->user_id;
+        //                 $qSpeak->save();
+        //             }
+        //         }
+        //     }
+        // }
+        $banner = self::with(['question','question.speak','question.speak.image','question.speak.user']);
         // 是否是全部年级
         if ($grade != 0)
         {
@@ -58,7 +78,7 @@ class Topic extends Model
     public static function getMyTopic($id, $type, $userID)
     {
         self::where('stop_time', '<=', date('Y-m-d H:i:s',time()))->update(['status' => '9']);
-        
+
         $banner = self::with(['question','question.speak','question.speak.image']);
 
         if ($type == 0)

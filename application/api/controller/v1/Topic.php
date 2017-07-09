@@ -115,6 +115,7 @@ class Topic extends BaseController
     	$answers = TopicModel::getAnswerByTopicID($id);
     	return $answers;
     }
+
     public function setAnswer()
     {
     	$uid = TokenService::getCurrentUid();
@@ -128,8 +129,13 @@ class Topic extends BaseController
         }
 
     	$topic_id = input('post.topic_id');
-    	$answer_id = TopicModel::setAnswerByTopicID($topic_id);
-    	$topic = TopicModel::get($topic_id);
+        $topic = TopicModel::get($topic_id);
+        // 只有该topic是抢答状态，且该用户就是抢答用户才可以回答
+        if ($topic->status != 1 || $topic->answer_user_id != $user->id)
+        {
+            return "fail";
+        }
+        $answer_id = TopicModel::setAnswerByTopicID($topic_id);
     	$topic->status = 2; // 2表示回答完成待确认，8表示完成付款
     	$topic->save();
 

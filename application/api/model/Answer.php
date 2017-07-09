@@ -16,8 +16,19 @@ class Answer extends Model
 
     public function createSpeak()
     {
+        $uid = TokenService::getCurrentUid();
+        $user = User::get($uid);
+        if(!$user){
+            throw new UserException([
+                'code' => 404,
+                'msg' => '该用户不存在',
+                'errorCode' => 60001
+            ]);
+        }
+
         $speak = new SpeakModel;
         $speak->title = input('post.title');
+        $speak->user_id = $user->id;
         $speak->content = input('post.content');
         $speak->save();
 
