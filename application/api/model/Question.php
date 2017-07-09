@@ -6,6 +6,7 @@ use think\Model;
 use think\Request;
 use app\api\model\Speak as SpeakModel;
 use app\api\model\Image as ImageModel;
+use app\api\service\Token as TokenService;
 
 class Question extends Model
 {

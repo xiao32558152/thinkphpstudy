@@ -2,8 +2,6 @@
 
 namespace app\api\model;
 
-use app\api\service\Token as TokenService;
-
 use think\Model;
 
 class Speak extends Model
