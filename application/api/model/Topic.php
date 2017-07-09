@@ -11,7 +11,7 @@ use app\api\model\Answer as AnswerModel;
 class Topic extends Model
 {
     //
-    protected $hidden = ['question_id', 'isPublic', 'user_id', 'answer_user_id', 'stop_time', 'create_time'];
+    protected $hidden = ['question_id', 'isPublic', 'user_id', 'answer_user_id', 'stop_time', 'createtime'];
 
     public function question()
     {
