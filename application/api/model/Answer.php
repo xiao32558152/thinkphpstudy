@@ -9,6 +9,8 @@ use app\api\model\Image as ImageModel;
 
 class Answer extends Model
 {
+    protected $hidden = ['id', 'speak_id', 'topic_id'];
+
     public function speak()
     {
         return $this->belongsTo('Speak', 'speak_id', 'id');
