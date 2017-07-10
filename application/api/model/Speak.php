@@ -3,6 +3,7 @@
 namespace app\api\model;
 
 use think\Model;
+use think\Db;
 
 class Speak extends Model
 {

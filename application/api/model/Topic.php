@@ -5,6 +5,7 @@ namespace app\api\model;
 use app\lib\enum\TopicStatusEnum;
 use think\Model;
 use think\Request;
+use app\api\model\User;
 use app\api\model\Question as QuestionModel;
 use app\api\model\Answer as AnswerModel;
 
@@ -16,6 +17,22 @@ class Topic extends Model
     public function question()
     {
         return $this->belongsTo('Question', 'question_id', 'id');
+    }
+
+    public function answers()
+    {
+        // 只返回最新的一个答案
+         return $this->hasMany('Answer', 'topic_id', 'id')->order('answer_time', 'desc')->limit(1);
+    }
+    
+    public function askuser()
+    {
+        return $this->belongsTo('User', 'user_id', 'id');
+    }
+
+    public function answeruser()
+    {
+        return $this->belongsTo('User', 'answer_user_id', 'id');
     }
 
     public static function getTopic($id, $sort, $grade, $subject, $status, $isPublic)
@@ -40,7 +57,7 @@ class Topic extends Model
         //         }
         //     }
         // }
-        $banner = self::with(['question','question.speak','question.speak.image']);
+        $banner = self::with(['question','askuser', 'question.speak','question.speak.image']);
         // 是否是全部年级
         if ($grade != 0)
         {
@@ -70,8 +87,9 @@ class Topic extends Model
             $banner = $banner->order('price', 'desc');
         }
 
+        // 这种方式image和user都可以返回
+        // $banner = $banner->page($id,10)->join('user u','topic.user_id = u.id')->select();
         $banner = $banner->page($id,10)->select();
-        
         return $banner;
     }
 
@@ -95,11 +113,6 @@ class Topic extends Model
         
         return $banner;
     }
-    public function answers()
-    {
-        // 只返回最新的一个答案
-        return $this->hasMany('Answer', 'topic_id', 'id')->order('answer_time', 'desc')->limit(1);
-    }
 
     public static function createTopic()
     {
@@ -113,10 +126,11 @@ class Topic extends Model
     }
     public static function getAnswerByTopicID($id)
     {
-        $answer = self::with(['answers','answers.speak','answers.speak.image'])
+        $answer = self::with(['answers','answeruser', 'answers.speak','answers.speak.image'])
             ->find($id);
         return $answer;
     }
+
     public static function setAnswerByTopicID($id)
     {
         $answer = new AnswerModel;

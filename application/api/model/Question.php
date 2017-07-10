@@ -18,6 +18,11 @@ class Question extends Model
         return $this->belongsTo('Speak', 'speak_id', 'id');
     }
 
+    // public function image()
+    // {
+    //     return $this->hasManyThrough('Topic','User');
+    // }
+
     public function createSpeak()
     {
         $uid = TokenService::getCurrentUid();
