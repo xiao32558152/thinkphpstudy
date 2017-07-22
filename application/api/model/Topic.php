@@ -96,15 +96,15 @@ class Topic extends Model
     public static function getMyTopic($id, $type, $userID)
     {
         self::where('stop_time', '<=', date('Y-m-d H:i:s',time()))->update(['status' => '9']);
-
-        $banner = self::with(['question','question.speak','question.speak.image']);
-
+        
         if ($type == 0)
         {// 我问
+            $banner = self::with(['question','question.speak','question.speak.image']);
             $banner = $banner->where('user_id', '=', $userID);
         }
         else
         {// 我答
+            $banner = self::with(['question','askuser','question.speak','question.speak.image']);
             $banner = $banner->where('answer_user_id', '=', $userID);
         }
         
@@ -126,7 +126,7 @@ class Topic extends Model
     }
     public static function getAnswerByTopicID($id)
     {
-        $answer = self::with(['answers','askuser','answeruser', 'answers.speak','answers.speak.image'])
+        $answer = self::with(['answers','answeruser', 'answers.speak','answers.speak.image'])
             ->find($id);
         return $answer;
     }
