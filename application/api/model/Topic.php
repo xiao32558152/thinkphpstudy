@@ -126,7 +126,7 @@ class Topic extends Model
     }
     public static function getAnswerByTopicID($id)
     {
-        $answer = self::with(['answers','answeruser', 'answers.speak','answers.speak.image'])
+        $answer = self::with(['answers','askuser','answeruser', 'answers.speak','answers.speak.image'])
             ->find($id);
         return $answer;
     }
