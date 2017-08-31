@@ -22,11 +22,13 @@ class Pay extends BaseController
         'checkExclusiveScope' => ['only' => 'getPreOrder']
     ];
     
-    public function getPreOrder($id='')
+    public function getPreOrder()
     {
+        $id = input('post.id');
+        $price = input('post.price');
         (new IDMustBePositiveInt()) -> goCheck();
         $pay= new PayService($id);
-        return $pay->pay();
+        return $pay->pay($price);
     }
 
     public function redirectNotify()

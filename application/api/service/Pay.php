@@ -37,17 +37,18 @@ class Pay
         $this->orderID = $orderID;
     }
 
-    public function pay()
+    public function pay($price)
     {
-        $this->checkOrderValid();
-        $order = new Order();
-        $status = $order->checkOrderStock($this->orderID);
-        if (!$status['pass'])
-        {
-            return $status;
-        }
-        return $this->makeWxPreOrder($status['orderPrice']);
+        // $this->checkOrderValid();
+        // $order = new Order();
+        // $status = $order->checkOrderStock($this->orderID);
+        // if (!$status['pass'])
+        // {
+        //     return $status;
+        // }
+        // return $this->makeWxPreOrder($status['orderPrice']);
         //        $this->checkProductStock();
+        return $this->makeWxPreOrder($price);
     }
 
     // 构建微信支付订单信息
