@@ -39,6 +39,7 @@ class Pay
 
     public function pay($price)
     {
+        echo 'pay';
         // $this->checkOrderValid();
         // $order = new Order();
         // $status = $order->checkOrderStock($this->orderID);
