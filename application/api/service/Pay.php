@@ -49,6 +49,7 @@ class Pay
         // }
         // return $this->makeWxPreOrder($status['orderPrice']);
         //        $this->checkProductStock();
+        $this->orderNo = 1;
         return $this->makeWxPreOrder($price);
     }
 
