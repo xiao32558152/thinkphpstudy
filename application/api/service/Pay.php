@@ -49,7 +49,6 @@ class Pay
         // }
         // return $this->makeWxPreOrder($status['orderPrice']);
         //        $this->checkProductStock();
-        $wxOrder['prepay_id'] = $this->orderID;
         return $this->makeWxPreOrder($price);
     }
 
@@ -84,6 +83,7 @@ class Pay
 //            throw new Exception('获取预支付订单失败');
         }
         // $this->recordPreOrder($wxOrder);
+        $wxOrder['prepay_id'] = $this->orderID;
         $signature = $this->sign($wxOrder);
         return $signature;
     }
