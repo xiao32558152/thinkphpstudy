@@ -68,8 +68,9 @@ class Pay
         $wxOrderData->SetTotal_fee($totalPrice * 100);
         $wxOrderData->SetBody('零食商贩');
         $wxOrderData->SetOpenid($openid);
-        $wxOrderData->SetNotify_url(config('secure.pay_back_url'));
-
+        // $wxOrderData->SetNotify_url(config('secure.pay_back_url'));
+        
+        $wxOrderData->SetNotify_url('http://z.cn/api/v1/pay/notify');
         return $this->getPaySignature($wxOrderData);
     }
 
