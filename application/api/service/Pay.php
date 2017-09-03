@@ -83,7 +83,7 @@ class Pay
             Log::record('获取预支付订单失败','error');
 //            throw new Exception('获取预支付订单失败');
         }
-        $this->recordPreOrder($wxOrder);
+        // $this->recordPreOrder($wxOrder);
         $signature = $this->sign($wxOrder);
         return $signature;
     }
