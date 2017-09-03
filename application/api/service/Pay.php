@@ -80,10 +80,10 @@ class Pay
         if($wxOrder['return_code'] != 'SUCCESS' || $wxOrder['result_code'] !='SUCCESS'){
             Log::record($wxOrder,'error');
             Log::record('获取预支付订单失败','error');
-//            throw new Exception('获取预支付订单失败');
+           throw new Exception('获取预支付订单失败');
         }
         // $this->recordPreOrder($wxOrder);
-        $wxOrder['prepay_id'] = $this->orderID;
+        // $wxOrder['prepay_id'] = $this->orderID;
         $signature = $this->sign($wxOrder);
         return $signature;
     }
