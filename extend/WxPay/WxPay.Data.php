@@ -119,7 +119,6 @@ class WxPayDataBase
 		$string = md5($string);
 		//签名步骤四：所有字符转为大写
 		$result = strtoupper($string);
-		Log::record($result,'info');
 		return $result;
 	}
 	

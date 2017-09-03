@@ -81,6 +81,7 @@ class Pay
         if($wxOrder['return_code'] != 'SUCCESS' || $wxOrder['result_code'] !='SUCCESS'){
             Log::record($wxOrder,'error');
             Log::record('获取预支付订单失败','error');
+            LOG::record($wxOrderData, 'error');
             echo $wxOrder['return_code'];
             echo $wxOrder['return_msg'];
            throw new Exception('获取预支付订单失败');
