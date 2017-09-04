@@ -12,6 +12,7 @@ namespace app\api\service;
 
 
 use app\api\model\Order as OrderModel;
+use app\api\model\Topic as TopicModel;
 use app\lib\exception\OrderException;
 use app\lib\exception\TokenException;
 use think\Exception;
@@ -39,8 +40,7 @@ class Pay
 
     public function pay($price)
     {
-        // echo 'pay';
-        // $this->checkOrderValid();
+        $this->checkOrderValid();
         // $order = new Order();
         // $status = $order->checkOrderStock($this->orderID);
         // if (!$status['pass'])
@@ -49,7 +49,6 @@ class Pay
         // }
         // return $this->makeWxPreOrder($status['orderPrice']);
         //        $this->checkProductStock();
-        $this->orderNo = '12345';
         return $this->makeWxPreOrder($price);
     }
 
@@ -87,15 +86,14 @@ class Pay
             echo $wxOrder['return_msg'];
            throw new Exception('获取预支付订单失败');
         }
-        // $this->recordPreOrder($wxOrder);
-        // $wxOrder['prepay_id'] = $this->orderID;
+        $this->recordPreOrder($wxOrder);
         $signature = $this->sign($wxOrder);
         return $signature;
     }
 
     private function recordPreOrder($wxOrder){
         // 必须是update，每次用户取消支付后再次对同一订单支付，prepay_id是不同的
-        OrderModel::where('id', '=', $this->orderID)
+        UserModel::where('id', '=', $this->orderID)
             ->update(['prepay_id' => $wxOrder['prepay_id']]);
     }
 
@@ -123,13 +121,13 @@ class Pay
      */
     private function checkOrderValid()
     {
-        $order = OrderModel::where('id', '=', $this->orderID)
+        $order = TopicModel::where('id', '=', $this->orderID)
             ->find();
         if (!$order)
         {
             throw new OrderException();
         }
-//        $currentUid = Token::getCurrentUid();
+       $currentUid = Token::getCurrentUid();
         if(!Token::isValidOperate($order->user_id))
         {
             throw new TokenException(
@@ -138,14 +136,14 @@ class Pay
                     'errorCode' => 10003
                 ]);
         }
-        if($order->status != 1){
+        if($order->status != -1){
             throw new OrderException([
                 'msg' => '订单已支付过啦',
                  'errorCode' => 80003,
                 'code' => 400
             ]);
         }
-        $this->orderNo = $order->order_no;
+        $this->orderNo = strva($order->id);
         return true;
     }
 }
