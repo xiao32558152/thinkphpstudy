@@ -127,7 +127,8 @@ class Pay
         {
             throw new OrderException();
         }
-       $currentUid = Token::getCurrentUid();
+        $currentUid = Token::getCurrentUid();
+        Log::record($currentUid, 'info');
         if(!Token::isValidOperate($order->user_id))
         {
             throw new TokenException(
