@@ -144,7 +144,7 @@ class Pay
                 'code' => 400
             ]);
         }
-        $this->orderNo = strva($order->id);
+        $this->orderNo = (string)$order->id;
         return true;
     }
 }
