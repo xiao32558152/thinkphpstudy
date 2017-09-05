@@ -70,7 +70,8 @@ class Topic extends BaseController
         $topic->stop_time = $stopTime;
 		$topic->createtime = date('Y-m-d H:i:s',time());
 		$topic->price = $price;
-		$topic->user_id = $user->id;
+        $topic->user_id = $user->id;
+        $topic->status = -1;
         $topic->save();
 
         $user_topic = new UserTopicModel;
