@@ -69,7 +69,7 @@ class Pay
         $wxOrderData->SetOpenid($openid);
         // $wxOrderData->SetNotify_url(config('secure.pay_back_url'));
         
-        $wxOrderData->SetNotify_url('http://z.cn/api/v1/pay/notify');
+        $wxOrderData->SetNotify_url('https://17348576.sudaquick.com/zerg/public/api/v1/pay/notify');
         return $this->getPaySignature($wxOrderData);
     }
 
