@@ -47,6 +47,7 @@ class Pay extends BaseController
     {
 //        $xmlData = file_get_contents('php://input');
 //        Log::error($xmlData);
+        Log::record('支付回调入口','info');
         $notify = new WxNotify();
         $notify->handle();
 //        $xmlData = file_get_contents('php://input');

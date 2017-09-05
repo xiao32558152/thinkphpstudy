@@ -51,6 +51,7 @@ class WxNotify extends \WxPayNotify
     public function NotifyProcess($data, &$msg)
     {
 //        $data = $this->data;
+        Log::record('支付回调','info');
         LOG::record($data, 'info');
         LOG::record($msg, 'info');
         if ($data['result_code'] == 'SUCCESS') {
