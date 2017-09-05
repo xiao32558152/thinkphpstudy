@@ -15,6 +15,7 @@ use app\api\service\Pay as PayService;
 use app\api\service\WxNotify;
 use app\api\validate\IDMustBePositiveInt;
 use think\Controller;
+use think\Log;
 
 class Pay extends BaseController
 {
