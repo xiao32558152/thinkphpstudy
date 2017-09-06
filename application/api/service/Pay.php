@@ -88,6 +88,8 @@ class Pay
         }
         $this->recordPreOrder($wxOrder);
         $signature = $this->sign($wxOrder);
+        Log::record('获取预订单', 'info');
+        Log::record($signature, 'info');
         return $signature;
     }
 
