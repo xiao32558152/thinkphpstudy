@@ -25,6 +25,7 @@ class Pay extends BaseController
     
     public function getPreOrder()
     {
+        Log::record('获取预订单入口', 'info');
         $id = input('post.id');
         $price = input('post.price');
         (new IDMustBePositiveInt()) -> goCheck();

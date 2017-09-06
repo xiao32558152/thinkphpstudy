@@ -40,6 +40,7 @@ class Pay
 
     public function pay($price)
     {
+        Log::record('支付入口', 'info');
         $this->checkOrderValid();
         // $order = new Order();
         // $status = $order->checkOrderStock($this->orderID);
@@ -55,6 +56,7 @@ class Pay
     // 构建微信支付订单信息
     private function makeWxPreOrder($totalPrice)
     {
+        Log::record('构建微信支付订单信息', 'info');
         $openid = Token::getCurrentTokenVar('openid');
 
         if (!$openid)
