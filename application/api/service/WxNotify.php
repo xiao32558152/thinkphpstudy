@@ -12,6 +12,7 @@ namespace app\api\service;
 
 
 use app\api\model\Order;
+use app\api\model\Topic; 
 use app\api\model\Product;
 use app\api\service\Order as OrderService;
 use app\lib\enum\OrderStatusEnum;
@@ -58,17 +59,8 @@ class WxNotify extends \WxPayNotify
             $orderNo = $data['out_trade_no'];
             Db::startTrans();
             try {
-                $order = Order::where('order_no', '=', $orderNo)->lock(true)->find();
-                if ($order->status == 1) {
-                    $service = new OrderService();
-                    $status = $service->checkOrderStock($order->id);
-                    if ($status['pass']) {
-                        $this->updateOrderStatus($order->id, true);
-                        $this->reduceStock($status);
-                    } else {
-                        $this->updateOrderStatus($order->id, false);
-                    }
-                }
+                Topic::where('id', '=', $orderNo)
+                ->update(['status' => 0]);
                 Db::commit();
             } catch (Exception $ex) {
                 Db::rollback();
