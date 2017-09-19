@@ -111,6 +111,48 @@ class Topic extends BaseController
         return 0;
 	}
 
+    public function payTopic()
+	{
+		$uid = TokenService::getCurrentUid();
+        $user = User::get($uid);
+        if(!$user){
+            throw new UserException([
+                'code' => 404,
+                'msg' => '该用户不存在',
+                'errorCode' => 60001
+            ]);
+        }
+
+        // 检查下是否是该用户提问的
+        $topic_id = input('post.topic_id');
+        $topic = TopicModel::get($topic_id);
+        if ($topic->user_id != $user->id)
+        {
+            throw new UserException([
+                'code' => 404,
+                'msg' => '该问题不是该用户提问的',
+                'errorCode' => 60002
+            ]);
+        }
+        // 检查下状态是否是已回答待确认
+        if ($topic->status != 2)
+        {
+            throw new UserException([
+                'code' => 404,
+                'msg' => '该问题还不能确认支付',
+                'errorCode' => 60003
+            ]);
+        }
+        // 设置成完成付款状态
+        $topic->status = 8;
+        $topic->save();
+
+        // 钱给到用户账户
+        $user->money = $user->money + $topic->price;
+        $user->save();
+        return 0;
+    }
+    
     public function getAnswer($id)
     {
     	$answers = TopicModel::getAnswerByTopicID($id);
