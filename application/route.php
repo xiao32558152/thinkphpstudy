@@ -27,6 +27,7 @@ Route::post('api/:version/mytopic', 'api/:version.Topic/getMyTopic');
 Route::post('api/:version/createtopic/:id', 'api/:version.Topic/createTopic');
 Route::post('api/:version/rushtopic', 'api/:version.Topic/rushTopic');
 Route::post('api/:version/paytopic', 'api/:version.Topic/payTopic');
+Route::post('api/:version/settopicstatus', 'api/:version.Topic/setTopicStatus');
 Route::get('api/:version/answer/:id', 'api/:version.Topic/getAnswer');
 Route::post('api/:version/createanswer', 'api/:version.Topic/setAnswer');
 

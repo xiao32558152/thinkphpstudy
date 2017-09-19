@@ -8,6 +8,7 @@
 
 namespace app\api\controller\v1;
 
+use app\lib\enum\TopicStatusEnum;
 use app\api\controller\BaseController;
 use app\api\model\Topic as TopicModel;
 use app\api\model\UserTopic as UserTopicModel;
@@ -111,6 +112,49 @@ class Topic extends BaseController
         return 0;
 	}
 
+    public function setTopicStatus()
+	{
+		$uid = TokenService::getCurrentUid();
+        $user = User::get($uid);
+        if(!$user){
+            throw new UserException([
+                'code' => 404,
+                'msg' => '该用户不存在',
+                'errorCode' => 60001
+            ]);
+        }
+        $topicStatus = input('post.status');
+        if ($topicStatus == TopicStatusEnum::NEED_MODIFY)
+        {
+            // 检查下是否是该用户提问的
+            $topic_id = input('post.topic_id');
+            $topic = TopicModel::get($topic_id);
+            if ($topic->user_id != $user->id)
+            {
+                throw new UserException([
+                    'code' => 404,
+                    'msg' => '该问题不是该用户提问的',
+                    'errorCode' => 60002
+                ]);
+            }
+            // 检查下状态是否是已回答待确认或者已修改待确认
+            if ($topic->status != TopicStatusEnum::HAS_ANSWERED && 
+                $topic->status != TopicStatusEnum::HAS_MODIFIED)
+            {
+                throw new UserException([
+                    'code' => 404,
+                    'msg' => '该问题不能将状态改成需要修改',
+                    'errorCode' => 60003
+                ]);
+            }
+            // 设置成完成付款状态
+            $topic->status = TopicStatusEnum::NEED_MODIFY;
+            $topic->save();
+        }
+        
+        return 0;
+    }
+
     public function payTopic()
 	{
 		$uid = TokenService::getCurrentUid();
@@ -135,7 +179,7 @@ class Topic extends BaseController
             ]);
         }
         // 检查下状态是否是已回答待确认
-        if ($topic->status != 2)
+        if ($topic->status != TopicStatusEnum::HAS_ANSWERED)
         {
             throw new UserException([
                 'code' => 404,
@@ -144,7 +188,7 @@ class Topic extends BaseController
             ]);
         }
         // 设置成完成付款状态
-        $topic->status = 8;
+        $topic->status = TopicStatusEnum::PAID;
         $topic->save();
 
         // 钱给到用户账户
@@ -173,13 +217,14 @@ class Topic extends BaseController
 
     	$topic_id = input('post.topic_id');
         $topic = TopicModel::get($topic_id);
-        // 只有该topic是抢答状态，且该用户就是抢答用户才可以回答
-        if ($topic->status != 1 || $topic->answer_user_id != $user->id)
+        // 只有该topic是抢答状态或者需要修改的状态，且该用户就是抢答用户才可以回答
+        if (($topic->status != TopicStatusEnum::HAS_ANSWERER && $topic->status != TopicStatusEnum::NEED_MODIFY) || 
+        $topic->answer_user_id != $user->id)
         {
             return "fail";
         }
         $answer_id = TopicModel::setAnswerByTopicID($topic_id);
-    	$topic->status = 2; // 2表示回答完成待确认，8表示完成付款
+    	$topic->status = TopicStatusEnum::HAS_ANSWERED;
     	$topic->save();
 
 		// 该话题增加了一位参与的用户
