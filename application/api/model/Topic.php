@@ -88,7 +88,8 @@ class Topic extends Model
                 'errorCode' => 60001
             ]);
         }
-        $banner = $banner->where('user_id', '<>', $user->id);
+        // 先注释掉，等首页进入后就登录做好了再打开
+        //$banner = $banner->where('user_id', '<>', $user->id);
         // $banner = $banner->where('stop_time', '>', date('Y-m-d H:i:s',time()));
         if ($sort == 1)
         {
