@@ -8,6 +8,7 @@ use think\Request;
 use app\api\model\User;
 use app\api\model\Question as QuestionModel;
 use app\api\model\Answer as AnswerModel;
+use app\api\service\Token as TokenService;
 
 class Topic extends Model
 {
@@ -77,6 +78,17 @@ class Topic extends Model
             $banner = $banner->where('status', '=', $status);
             $banner = $banner->where('isPublic', '=', 1);
         }
+        // 过滤掉自己的提问
+        $uid = TokenService::getCurrentUid();
+        $user = User::get($uid);
+        if(!$user){
+            throw new UserException([
+                'code' => 404,
+                'msg' => '该用户不存在',
+                'errorCode' => 60001
+            ]);
+        }
+        $banner = $banner->where('user_id', '!=', $user->id);
         // $banner = $banner->where('stop_time', '>', date('Y-m-d H:i:s',time()));
         if ($sort == 1)
         {
