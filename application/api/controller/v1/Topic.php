@@ -12,6 +12,7 @@ use app\lib\enum\TopicStatusEnum;
 use app\api\controller\BaseController;
 use app\api\model\Topic as TopicModel;
 use app\api\model\UserTopic as UserTopicModel;
+use app\api\model\Complain as ComplainModel;
 use app\api\model\User;
 use app\api\service\Token;
 use app\api\service\Token as TokenService;
@@ -197,6 +198,55 @@ class Topic extends BaseController
         return 0;
     }
     
+    public function complainTopic()
+	{
+		$uid = TokenService::getCurrentUid();
+        $user = User::get($uid);
+        if(!$user){
+            throw new UserException([
+                'code' => 404,
+                'msg' => '该用户不存在',
+                'errorCode' => 60001
+            ]);
+        }
+
+        // 检查下是否是该用户提问或者回答的
+        $topic_id = input('post.topic_id');
+        $topic = TopicModel::get($topic_id);
+        if ($topic->user_id != $user->id && $topic->answer_user_id != $user->id)
+        {
+            throw new UserException([
+                'code' => 404,
+                'msg' => '该问题不是该用户提问或回答的',
+                'errorCode' => 60002
+            ]);
+        }
+        // 检查下状态是否是已回答待确认
+        if ($topic->status != TopicStatusEnum::HAS_ANSWERER && 
+            $topic->status != TopicStatusEnum::HAS_ANSWERED &&
+            $topic->status != TopicStatusEnum::NEED_MODIFY &&
+            $topic->status != TopicStatusEnum::WAIT_MODIFY &&
+            $topic->status != TopicStatusEnum::WAIT_MODIFY)
+        {
+            throw new UserException([
+                'code' => 404,
+                'msg' => '该问题不能申诉',
+                'errorCode' => 60003
+            ]);
+        }
+        // 设置成申诉状态
+        $topic->status = TopicStatusEnum::COMPLAIN;
+        $topic->save();
+
+        // 新建一条申诉记录
+        $complain = new ComplainModel();
+        $complain->topic_id = $topic_id;
+        $complain->user_id = $user->id;
+        $complain->description = input('post.content');
+        $complain->save();
+        return 0;
+    }
+
     public function getAnswer($id)
     {
     	$answers = TopicModel::getAnswerByTopicID($id);
@@ -224,7 +274,14 @@ class Topic extends BaseController
             return "fail";
         }
         $answer_id = TopicModel::setAnswerByTopicID($topic_id);
-    	$topic->status = TopicStatusEnum::HAS_ANSWERED;
+        if ($topic->status != TopicStatusEnum::HAS_ANSWERER)
+        {
+            $topic->status = TopicStatusEnum::HAS_ANSWERED;
+        }
+        else
+        {
+            $topic->status = TopicStatusEnum::NEED_MODIFY;
+        }
     	$topic->save();
 
 		// 该话题增加了一位参与的用户
