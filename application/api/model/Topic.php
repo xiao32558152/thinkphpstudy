@@ -88,7 +88,7 @@ class Topic extends Model
                 'errorCode' => 60001
             ]);
         }
-        $banner = $banner->where('user_id', '!=', $user->id);
+        $banner = $banner->where('user_id', '<>', $user->id);
         // $banner = $banner->where('stop_time', '>', date('Y-m-d H:i:s',time()));
         if ($sort == 1)
         {
