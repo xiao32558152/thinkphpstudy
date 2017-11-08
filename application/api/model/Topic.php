@@ -9,6 +9,7 @@ use app\api\model\User;
 use app\api\model\Question as QuestionModel;
 use app\api\model\Answer as AnswerModel;
 use app\api\service\Token as TokenService;
+use app\lib\exception\UserException;
 
 class Topic extends Model
 {

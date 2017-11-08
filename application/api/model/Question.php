@@ -7,6 +7,7 @@ use think\Request;
 use app\api\model\Speak as SpeakModel;
 use app\api\model\Image as ImageModel;
 use app\api\service\Token as TokenService;
+use app\lib\exception\UserException;
 
 class Question extends Model
 {

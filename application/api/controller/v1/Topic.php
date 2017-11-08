@@ -17,6 +17,7 @@ use app\api\model\User;
 use app\api\service\Token;
 use app\api\service\Token as TokenService;
 use think\Log;
+use app\lib\exception\UserException;
 
 class Topic extends BaseController
 {
