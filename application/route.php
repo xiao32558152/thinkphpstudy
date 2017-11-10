@@ -35,6 +35,13 @@ Route::post('api/:version/createanswer', 'api/:version.Topic/setAnswer');
 // 获取已答列表
 Route::get('api/:version/answeredtopic/:id/:sort/:grade/:subject', 'api/:version.Topic/getPublicTopic');
 
+////////////////////////// 后台管理系统
+// 获取退单列表
+Route::get('api/:version/chargedtopic/:id/:sort/:grade/:subject', 'api/:version.Topic/getChargeBackTopic');
+
+// 获取打钱列表
+Route::get('api/:version/withdraw/:id', 'api/:version.Withdraw/getWithdrawList');
+
 //Theme
 // 如果要使用分组路由，建议使用闭包的方式，数组的方式不允许有同名的key
 //Route::group('api/:version/theme',[

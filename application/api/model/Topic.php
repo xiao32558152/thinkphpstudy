@@ -39,6 +39,7 @@ class Topic extends Model
 
     public static function getTopic($id, $sort, $grade, $subject, $status, $isPublic)
     {
+        // 9表示过期
         self::where('stop_time', '<=', date('Y-m-d H:i:s',time()))->update(['status' => '9']);
         
         // 设置speak的user_id
@@ -74,21 +75,25 @@ class Topic extends Model
         {
             $banner = $banner->where('status', '=', $status);
         }
-        else if ($status == 8 && $isPublic)
+        else if ($status == TopicStatusEnum::PAID && $isPublic)
         {
             $banner = $banner->where('status', '=', $status);
             $banner = $banner->where('isPublic', '=', 1);
         }
-        // 过滤掉自己的提问
-        $uid = TokenService::getCurrentUid();
-        $user = User::get($uid);
-        if(!$user){
-            throw new UserException([
-                'code' => 404,
-                'msg' => '该用户不存在',
-                'errorCode' => 60001
-            ]);
+        else if ($status == TopicStatusEnum::CHARGE_BACK)
+        {
+            $banner = $banner->where('status', '=', $status);
         }
+        // 过滤掉自己的提问
+        // $uid = TokenService::getCurrentUid();
+        // $user = User::get($uid);
+        // if(!$user){
+        //     throw new UserException([
+        //         'code' => 404,
+        //         'msg' => '该用户不存在',
+        //         'errorCode' => 60001
+        //     ]);
+        // }
         // 先注释掉，等首页进入后就登录做好了再打开
         //$banner = $banner->where('user_id', '<>', $user->id);
         // $banner = $banner->where('stop_time', '>', date('Y-m-d H:i:s',time()));

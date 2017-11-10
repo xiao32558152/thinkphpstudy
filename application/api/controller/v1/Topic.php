@@ -13,6 +13,7 @@ use app\api\controller\BaseController;
 use app\api\model\Topic as TopicModel;
 use app\api\model\UserTopic as UserTopicModel;
 use app\api\model\Complain as ComplainModel;
+use app\api\model\Withdraw as WithdrawModel;
 use app\api\model\User;
 use app\api\service\Token;
 use app\api\service\Token as TokenService;
@@ -32,7 +33,13 @@ class Topic extends BaseController
 	public function getPublicTopic($id, $sort, $grade, $subject)
     {
         // id为空则返回前20个topic
-        $banner = TopicModel::getTopic($id, $sort, $grade, $subject, 8, 1);
+        $banner = TopicModel::getTopic($id, $sort, $grade, $subject, TopicStatusEnum::PAID, 1);
+        return $banner;
+    }
+    public function getChargeBackTopic($id, $sort, $grade, $subject)
+    {
+        // id为空则返回前20个topic
+        $banner = TopicModel::getTopic($id, $sort, $grade, $subject, TopicStatusEnum::CHARGE_BACK, 0);
         return $banner;
     }
 
@@ -149,9 +156,53 @@ class Topic extends BaseController
                     'errorCode' => 60003
                 ]);
             }
-            // 设置成完成付款状态
+            
             $topic->status = TopicStatusEnum::NEED_MODIFY;
+            $topic->status_description = input('post.content');
             $topic->save();
+        }
+        else if ($topicStatus == TopicStatusEnum::CHARGE_BACK)
+        {
+            // 检查下是否是该用户提问的
+            $topic_id = input('post.topic_id');
+            $topic = TopicModel::get($topic_id);
+            if ($topic->user_id != $user->id)
+            {
+                throw new UserException([
+                    'code' => 404,
+                    'msg' => '该问题不是该用户提问的',
+                    'errorCode' => 60002
+                ]);
+            }
+
+            // 设置成退单状态
+            $topic->status = TopicStatusEnum::CHARGE_BACK;
+            $topic->status_description = input('post.content');
+            $topic->save();
+
+            // 新建一条申诉退单记录
+            // $complain = new ComplainModel();
+            // $complain->topic_id = $topic_id;
+            // $complain->user_id = $user->id;
+            // $complain->description = "退单,原因:".input('post.content');
+            // $complain->save();
+        }
+        else if ($topicStatus == TopicStatusEnum::CHARGE_BACK_DONE)
+        {
+            $topic_id = input('post.topic_id');
+            $topic = TopicModel::get($topic_id);
+
+            // 设置成退单完成状态
+            $topic->status = TopicStatusEnum::CHARGE_BACK_DONE;
+            $topic->status_description = input('post.content');
+            $topic->save();
+
+            // 新建一条待打钱记录
+            $withdraw = new WithdrawModel();
+            $withdraw->user_id = $user->id;
+            $withdraw->money = $topic->price;
+            $withdraw->status = 0; // 0表示未处理
+            $withdraw->save();
         }
         
         return 0;

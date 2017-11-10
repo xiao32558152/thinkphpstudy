@@ -32,4 +32,6 @@ class TopicStatusEnum
     const PAID = 8; // 已确认付款
 
     const EXPIRED = 9; // 已过期且无人回答
+
+    const CHARGE_BACK_DONE = 10; // 退单完成
 }
